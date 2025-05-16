@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Complete Registration – Real Madrid CF</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+    .logo {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .payment-options button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      background: #fff;
+    }
+    .payment-options img {
+      width: 28px;
+      height: 28px;
+      margin-right: 12px;
+    }
+    .payment-options button:hover {
+      background: #f0f0f0;
+    }
+    .thank-you {
+      display: none;
+      margin-top: 30px;
+      background: #e9ffe9;
+      padding: 20px;
+      border-radius: 10px;
+      color: #2a662a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png" alt="Real Madrid Logo" class="logo" />
+    <h2>Complete Your Registration</h2>
+    <p id="welcome-text">Welcome, Francois Etchart. To finalize your registration and receive your official Collaborator License, please select your preferred payment method below.</p>
+
+    <form id="paymentForm">
+      <!-- Hidden Tracking Fields -->
+      <input type="hidden" name="full_name" value="Francois Etchart" />
+      <input type="hidden" name="email" value="francois@example.com" />
+      <input type="hidden" name="payment_method" id="payment_method" value="" />
+
+      <div class="payment-options">
+        <button type="button" onclick="submitPayment('Bank Transfer')">
+          <img src="https://cdn-icons-png.flaticon.com/512/1006/1006555.png" alt="Bank" /> Bank Transfer
+        </button>
+        <button type="button" onclick="submitPayment('PayPal')">
+          <img src="https://cdn-icons-png.flaticon.com/512/888/888870.png" alt="PayPal" /> PayPal
+        </button>
+        <button type="button" onclick="submitPayment('Wise')">
+          <img src="https://seeklogo.com/images/W/wise-logo-5364E252C6-seeklogo.com.png" alt="Wise" /> Wise (TransferWise)
+        </button>
+        <button type="button" onclick="submitPayment('Crypto')">
+          <img src="https://cdn-icons-png.flaticon.com/512/825/825500.png" alt="Crypto" /> Cryptocurrency
+        </button>
+      </div>
+    </form>
+
+    <div class="thank-you" id="thankYouMessage"></div>
+  </div>
+
+  <script>
+    function submitPayment(method) {
+      document.getElementById("payment_method").value = method;
+
+      // Simulate sending data via EmailJS or backend here
+
+      // Show confirmation message
+      const thankYou = document.getElementById("thankYouMessage");
+      thankYou.innerText = `Thank you. Payment instructions for ${method} will be sent to your registered email shortly.`;
+      thankYou.style.display = "block";
+
+      // Optionally disable buttons after selection
+      const buttons = document.querySelectorAll(".payment-options button");
+      buttons.forEach(btn => btn.disabled = true);
+    }
+  </script>
+</body>
+</html>
